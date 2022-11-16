@@ -1,24 +1,44 @@
-import logo from './logo.svg';
+
+import { useEffect, useState } from 'react';
 import './App.css';
+import movies from './movies.json'
+import View from './Components/View/View';
+import { Link, Route, Routes, useParams } from 'react-router-dom';
 
 function App() {
+  const [allMovies, setAllMovies] = useState([])
+
+
+  useEffect(() => {
+    setAllMovies(movies.movies)
+    console.log(movies.movies)
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className='nav'>
+        {allMovies.map(movie => {
+          let key = movie.episode_number - 1
+          let posterImage = `src/images/${movie.poster}`
+          return (
+            <Link to={'/view' + key}>
+              <div className='nav-tile' key={movie.episode_number}>
+                <img src={posterImage} alt="o" />
+                <h3>{movie.title}</h3>
+                <h3>{movie.episode_number}</h3>
+              </div>
+            </Link>
+
+          )
+        })}
+      </div>
+
+      <main>
+        <Routes>
+          <Route path='view:key' element={<View allMovies={allMovies} />} />
+        </Routes>
+      </main>
+    </div >
   );
 }
 
